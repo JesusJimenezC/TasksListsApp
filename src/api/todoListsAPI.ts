@@ -1,10 +1,12 @@
 import axios from "axios";
 import short from "short-uuid";
 
+const URL = import.meta.env.VITE_API_URL;
+
 // --------------LISTS API----------------
 
 const todoListsAPI = axios.create({
-  baseURL: "http://localhost:3000/todoLists",
+  baseURL: `${URL}/todoLists`,
 });
 
 export const getLists = async () => {
@@ -35,7 +37,7 @@ export const updateList = async (id: string, listName: string) => {
 // --------------TODOS API----------------
 
 const todosItemApi = axios.create({
-  baseURL: "http://localhost:3000/todos",
+  baseURL: `${URL}/todos`,
 });
 
 export const getTodos = async () => {
