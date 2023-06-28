@@ -6,8 +6,8 @@ import { router } from "./router/MainRouter.tsx";
 import { listsState } from "./state/atoms/listAtoms.ts";
 import { ITodo, IList } from "./types";
 import { useSetRecoilState } from "recoil";
-import { useTodoListsQuery } from "./hooks/lists.query.ts";
-import { useTodoItemsQuery } from "./hooks/todo.query.ts";
+import { useTodoListsQuery } from "./hooks/listsQuery.ts";
+import { useTodoItemsQuery } from "./hooks/todosQuery.ts";
 import { todoItemsState } from "./state/atoms/todoAtoms.ts";
 
 export default function App(): ReactElement {

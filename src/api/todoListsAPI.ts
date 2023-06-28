@@ -1,7 +1,16 @@
 import axios from "axios";
 import short from "short-uuid";
 
-const URL = import.meta.env.VITE_API_URL;
+interface ITodo {
+  id: string;
+  title: string;
+  description: string;
+  completed: boolean;
+  date: Date;
+  listId: string;
+}
+
+const URL = "http://localhost:3000";
 
 // --------------LISTS API----------------
 
@@ -23,8 +32,8 @@ export const createList = async (listName: string) => {
 };
 
 export const deleteList = async (id: string) => {
-  const response = await todoListsAPI.delete(`/${id}`);
-  return response.data;
+  await todoListsAPI.delete(`/${id}`);
+  return id;
 };
 
 export const updateList = async (id: string, listName: string) => {
@@ -63,25 +72,15 @@ export const createTodo = async (
 };
 
 export const deleteTodo = async (id: string) => {
-  const response = await todosItemApi.delete(`/${id}`);
-  return response.data;
+  await todosItemApi.delete(`/${id}`);
+  return id;
 };
 
-export const updateDescriptionTodo = async (
-  id: string,
-  title: string,
-  description: string
-) => {
-  const response = await todosItemApi.patch(`/${id}`, {
-    title,
-    description,
-  });
-  return response.data;
-};
-
-export const updateCompletedTodo = async (id: string, completed: boolean) => {
-  const response = await todosItemApi.patch(`/${id}`, {
-    completed,
+export const updateTodo = async (todo: ITodo) => {
+  const response = await todosItemApi.patch(`/${todo.id}`, {
+    title: todo.title,
+    description: todo.description,
+    completed: todo.completed,
   });
   return response.data;
 };

@@ -1,9 +1,6 @@
 import { Button, Text } from "@chakra-ui/react";
 import { RiDeleteBin5Line } from "react-icons/ri";
-import { setDeleteTodos } from "../../../helpers/todos.helper.ts";
-import { useDeleteTodoMutation } from "../../../hooks/todo.mutation.ts";
-import { useSetRecoilState } from "recoil";
-import { todoItemsState } from "../../../state/atoms/todoAtoms.ts";
+import { useDeleteTodo } from "../../../hooks/todos/useDeleteTodo.ts";
 
 interface IDeleteTodoProps {
   id: string;
@@ -11,10 +8,9 @@ interface IDeleteTodoProps {
 
 export default function DeleteTodo(props: IDeleteTodoProps) {
   const { id } = props;
-  const setTodoItems = useSetRecoilState(todoItemsState);
-  const deleteTodo = useDeleteTodoMutation();
+  const deleteTodo = useDeleteTodo();
   const handleDelete = () => {
-    deleteTodo.mutateAsync(id).then(() => setDeleteTodos(id, setTodoItems));
+    deleteTodo.mutate(id);
   };
 
   return (

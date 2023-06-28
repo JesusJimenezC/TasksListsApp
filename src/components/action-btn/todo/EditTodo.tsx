@@ -4,11 +4,8 @@ import { ITodo } from "../../../types";
 import ModalContainer from "../../shared/ModalContainer.tsx";
 import { useForm } from "react-hook-form";
 import ErrorAlert from "../../shared/ErrorAlert.tsx";
-import { todoItemsState } from "../../../state/atoms/todoAtoms.ts";
-import { useSetRecoilState } from "recoil";
 import ResizeTextarea from "react-textarea-autosize";
-import { useUpdateDescTodoMutation } from "../../../hooks/todo.mutation.ts";
-import { setUpdateDescTodo } from "../../../helpers/todos.helper.ts";
+import { useEditTodo } from "../../../hooks/todos/useEditTodo.ts";
 
 interface IEditTodoProps {
   todo: ITodo;
@@ -22,8 +19,7 @@ interface Inputs {
 export default function EditTodo(props: IEditTodoProps) {
   const { todo } = props;
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const setTodoItems = useSetRecoilState(todoItemsState);
-  const updateTodoMutation = useUpdateDescTodoMutation();
+  const editTodo = useEditTodo();
 
   const {
     register,
@@ -33,23 +29,14 @@ export default function EditTodo(props: IEditTodoProps) {
     formState: { errors },
   } = useForm<Inputs>();
 
-  const onSubmit = async () => {
-    await updateTodoMutation
-      .mutateAsync({
-        id: todo.id,
-        title: getValues("title"),
-        description: getValues("description"),
-      })
-      .then(() => {
-        setUpdateDescTodo(
-          todo.id,
-          getValues("title"),
-          getValues("description"),
-          setTodoItems
-        );
-        reset();
-        onClose();
-      });
+  const onSubmit = () => {
+    editTodo.mutate({
+      ...todo,
+      title: getValues("title"),
+      description: getValues("description"),
+    });
+    reset();
+    onClose();
   };
 
   return (

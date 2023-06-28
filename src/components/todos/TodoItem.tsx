@@ -58,7 +58,7 @@ export default function TodoItem(props: ITodoItemProps) {
         isDisabled={todo.completed}
       />
       <Flex mt="3">
-        <UpdateCompletedTodo id={todo.id} completed={todo.completed} />
+        <UpdateCompletedTodo todo={todo} />
         <Spacer />
         <DeleteTodo id={todo.id} />
       </Flex>

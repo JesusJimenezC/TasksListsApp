@@ -11,12 +11,8 @@ import ModalContainer from "../../shared/ModalContainer.tsx";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useParams } from "@tanstack/router";
 import ErrorAlert from "../../shared/ErrorAlert.tsx";
-import { ITodo } from "../../../types";
-import { useSetRecoilState } from "recoil";
-import { todoItemsState } from "../../../state/atoms/todoAtoms.ts";
 import ResizeTextarea from "react-textarea-autosize";
-import { useCreateTodoMutation } from "../../../hooks/todo.mutation.ts";
-import { setCreateTodo } from "../../../helpers/todos.helper.ts";
+import { useAddTodo } from "../../../hooks/todos/useAddTodo.ts";
 
 interface Inputs {
   title: string;
@@ -26,8 +22,7 @@ interface Inputs {
 export default function AddTodo() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { listId }: { listId: string } = useParams({ from: "/list" });
-  const setTodoItems = useSetRecoilState(todoItemsState);
-  const createTodoMutation = useCreateTodoMutation();
+  const addTodo = useAddTodo();
 
   const {
     register,
@@ -37,18 +32,14 @@ export default function AddTodo() {
     formState: { errors },
   } = useForm<Inputs>();
 
-  const onSubmit: SubmitHandler<Inputs> = async () => {
-    await createTodoMutation
-      .mutateAsync({
-        listId,
-        title: getValues("title"),
-        description: getValues("description"),
-      })
-      .then((todo: ITodo) => {
-        setCreateTodo(todo, setTodoItems);
-        reset();
-        onClose();
-      });
+  const onSubmit: SubmitHandler<Inputs> = () => {
+    addTodo.mutate({
+      id: listId,
+      title: getValues("title"),
+      description: getValues("description"),
+    });
+    reset();
+    onClose();
   };
 
   return (

@@ -6,14 +6,10 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { RiAddFill } from "react-icons/ri";
-import { listsState } from "../../../state/atoms/listAtoms.ts";
-import { useSetRecoilState } from "recoil";
-import { IList } from "../../../types";
 import ModalContainer from "../../shared/ModalContainer.tsx";
 import { SubmitHandler, useForm } from "react-hook-form";
 import ErrorAlert from "../../shared/ErrorAlert.tsx";
-import { useCreateListMutation } from "../../../hooks/lists.mutation.ts";
-import { setCreatedList } from "../../../helpers/lists.helper.ts";
+import { useCreateList } from "../../../hooks/lists/useCreateList.ts";
 
 interface Inputs {
   listName: string;
@@ -21,8 +17,7 @@ interface Inputs {
 
 export default function AddList() {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const setLists = useSetRecoilState(listsState);
-  const createList = useCreateListMutation();
+  const createList = useCreateList();
 
   const {
     register,
@@ -32,10 +27,8 @@ export default function AddList() {
     formState: { errors },
   } = useForm<Inputs>();
 
-  const onSubmit: SubmitHandler<Inputs> = async () => {
-    await createList
-      .mutateAsync(getValues("listName"))
-      .then((list: IList) => setCreatedList(list, setLists));
+  const onSubmit: SubmitHandler<Inputs> = () => {
+    createList.mutate(getValues("listName"));
     reset();
     onClose();
   };

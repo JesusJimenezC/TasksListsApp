@@ -2,12 +2,8 @@ import { Button, Input, useDisclosure } from "@chakra-ui/react";
 import { RiPencilFill } from "react-icons/ri";
 import ModalContainer from "../../shared/ModalContainer.tsx";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { IList } from "../../../types";
 import ErrorAlert from "../../shared/ErrorAlert.tsx";
-import { useSetRecoilState } from "recoil";
-import { listsState } from "../../../state/atoms/listAtoms.ts";
-import { useUpdateListMutation } from "../../../hooks/lists.mutation.ts";
-import { setUpdatedList } from "../../../helpers/lists.helper.ts";
+import { useEditList } from "../../../hooks/lists/useEditList.ts";
 
 interface IEditListProps {
   listId: string;
@@ -21,8 +17,7 @@ interface Inputs {
 export const EditList = (props: IEditListProps) => {
   const { listId, listName } = props;
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const setLists = useSetRecoilState(listsState);
-  const updateList = useUpdateListMutation();
+  const editList = useEditList();
 
   const {
     register,
@@ -32,14 +27,10 @@ export const EditList = (props: IEditListProps) => {
     formState: { errors },
   } = useForm<Inputs>();
 
-  const onSubmit: SubmitHandler<Inputs> = async () => {
-    await updateList
-      .mutateAsync({ id: listId, listName: getValues("listName") })
-      .then((updatedList: IList) => {
-        setUpdatedList(updatedList, setLists);
-        reset();
-        onClose();
-      });
+  const onSubmit: SubmitHandler<Inputs> = () => {
+    editList.mutate({ id: listId, listName: getValues("listName") });
+    reset();
+    onClose();
   };
 
   return (

@@ -11,7 +11,7 @@ const styles: { global: (props: any) => { body: { bg: string } } } = {
 
 const config: ThemeConfig = {
   initialColorMode: "dark",
-  useSystemColorMode: true,
+  useSystemColorMode: false,
 };
 
 const theme: Record<string, any> = extendTheme({ config, styles });

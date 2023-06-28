@@ -1,13 +1,10 @@
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { Button } from "@chakra-ui/react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { listsState } from "../../../state/atoms/listAtoms.ts";
+import { useRecoilValue } from "recoil";
 import { ITodo } from "../../../types";
 import { todoItemsState } from "../../../state/atoms/todoAtoms.ts";
-import { useDeleteListMutation } from "../../../hooks/lists.mutation.ts";
-import { useDeleteTodoMutation } from "../../../hooks/todo.mutation.ts";
-import { setDeletedList } from "../../../helpers/lists.helper.ts";
-import { setDeleteTodos } from "../../../helpers/todos.helper.ts";
+import { useDeleteList } from "../../../hooks/lists/useDeleteList.ts";
+import { useDeleteTodo } from "../../../hooks/todos/useDeleteTodo.ts";
 
 interface IDeleteBtnProps {
   listId: string;
@@ -15,22 +12,17 @@ interface IDeleteBtnProps {
 
 export default function DeleteList(props: IDeleteBtnProps) {
   const { listId } = props;
-  const setLists = useSetRecoilState(listsState);
-  const setTodo = useSetRecoilState(todoItemsState);
   const todoItems = useRecoilValue(todoItemsState);
+  const deleteList = useDeleteList();
+  const deleteTodo = useDeleteTodo();
 
-  const deleteList = useDeleteListMutation();
-  const deleteTodo = useDeleteTodoMutation();
-
-  const handleDelete = async () => {
+  const handleDelete = () => {
     todoItems.map((todo: ITodo) => {
       if (todo.listId === listId) {
-        deleteTodo
-          .mutateAsync(todo.id)
-          .then(() => setDeleteTodos(todo.id, setTodo));
+        deleteTodo.mutate(todo.id);
       }
     });
-    deleteList.mutateAsync(listId).then(() => setDeletedList(listId, setLists));
+    deleteList.mutate(listId);
   };
 
   return (
