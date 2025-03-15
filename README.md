@@ -46,6 +46,6 @@ This project is licensed under the [MIT License](LICENSE). Please feel free to u
 
 ## Contact
 
-If you have any questions or questions, please contact [jesus.jimenezc.mx@gmail.com].
+If you have any questions or questions, please contact [jesus.jimenez.mx@proton.me](mailto:jesus.jimenez.mx@proton.me)
 
 Happy organizing your tasks with the Todo-List app!
